@@ -1,0 +1,15 @@
+# PyTorch CPU-only (легкая версия)
+--extra-index-url https://download.pytorch.org/whl/cpu
+torch
+
+# Core
+fastapi
+uvicorn[standard]
+pydantic
+
+# AI/ML
+chromadb
+sentence-transformers
+
+# Utils
+beautifulsoup4
