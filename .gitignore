@@ -21,3 +21,9 @@ yarn-error.log
 /.nova
 /.vscode
 /.zed
+# Python cache
+__pycache__/
+*.py[cod]
+
+# ChromaDB local files
+chroma_db/
