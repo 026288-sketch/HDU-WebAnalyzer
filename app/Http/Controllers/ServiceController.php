@@ -117,8 +117,8 @@ class ServiceController extends Controller
 
             $workDirPuppeteer = base_path('app/Services/Scraper');
             $workDirPython = base_path('similarity');
-            $logFilePuppeteer = base_path('logs/puppeteer.log');
-            $logFilePython = base_path('logs/python.log');
+            $logFilePuppeteer = storage_path('logs/puppeteer.log');
+            $logFilePython = storage_path('logs/python.log');
 
             if (PHP_OS_FAMILY === 'Windows') {
                 // Start Puppeteer
