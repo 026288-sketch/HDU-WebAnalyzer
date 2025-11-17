@@ -1,5 +1,7 @@
 @echo off
-chcp 65001 >nul
+chcp 65001 >nul 2>&1
+setlocal enabledelayedexpansion
+
 echo.
 echo ========================================
 echo   Python Environment Setup
@@ -9,91 +11,103 @@ echo.
 REM Check Python
 python --version >nul 2>&1
 if errorlevel 1 (
-    echo ❌ Python not found!
+    echo [ERROR] Python not found!
     echo.
     echo Install Python 3.8+ from https://www.python.org/downloads/
-    echo ✅ Check "Add Python to PATH" during installation
+    echo [INFO] Check "Add Python to PATH" during installation
     pause
     exit /b 1
 )
-echo ✅ Python found:
+echo [OK] Python found:
 python --version
 echo.
 
 REM Check if .venv exists
 if exist ".venv" (
-    echo ⚠️  Virtual environment already exists
+    echo [WARNING] Virtual environment already exists
     choice /C YN /M "Recreate environment? (Y - yes, N - no)"
     if errorlevel 2 goto :skip_venv
-    echo 🗑️  Removing old environment...
+    echo [INFO] Removing old environment...
     rmdir /s /q .venv
+    if errorlevel 1 (
+        echo [ERROR] Failed to remove old environment
+        pause
+        exit /b 1
+    )
 )
 
 REM Create virtual environment
-echo 📦 Creating virtual environment...
+echo [INFO] Creating virtual environment...
 python -m venv .venv
 if errorlevel 1 (
-    echo ❌ Failed to create environment
+    echo [ERROR] Failed to create environment
     pause
     exit /b 1
 )
 
 :skip_venv
-
 REM Activate environment
-echo 🔌 Activating environment...
+echo [INFO] Activating environment...
 call .venv\Scripts\activate.bat
-
-REM Update pip
-echo 📥 Updating pip...
-python -m pip install --upgrade pip --quiet
-
-REM Install dependencies
-echo 📚 Installing dependencies...
-if not exist "requirements.txt" (
-    echo ❌ requirements.txt not found!
+if errorlevel 1 (
+    echo [ERROR] Failed to activate environment
     pause
     exit /b 1
 )
 
+REM Update pip
+echo [INFO] Updating pip...
+python -m pip install --upgrade pip --quiet
+if errorlevel 1 (
+    echo [WARNING] Pip update failed, continuing anyway...
+)
+
+REM Install dependencies
+echo [INFO] Installing dependencies...
+if not exist "requirements.txt" (
+    echo [ERROR] requirements.txt not found!
+    pause
+    exit /b 1
+)
 pip install -r requirements.txt
 if errorlevel 1 (
-    echo ❌ Failed to install dependencies
+    echo [ERROR] Failed to install dependencies
     pause
     exit /b 1
 )
 
 echo.
 echo ========================================
-echo   🤖 Downloading model
+echo   Model Download
 echo ========================================
 echo.
 
 REM Run model download script
 if exist "download_model.py" (
+    echo [INFO] Running model download...
     python download_model.py
     if errorlevel 1 (
-        echo ⚠️  Model download failed, but continuing...
+        echo [WARNING] Model download failed, but continuing...
     )
 ) else (
-    echo ⚠️  download_model.py not found, skipping model download
+    echo [WARNING] download_model.py not found, skipping model download
 )
 
 echo.
 echo ========================================
-echo   ✅ Setup completed!
+echo   Setup completed successfully!
 echo ========================================
 echo.
-echo 📝 To activate environment:
+echo [INFO] To activate environment in future:
 echo    .venv\Scripts\activate
 echo.
-echo 🚀 To start server:
+echo [INFO] To start server:
 echo    python -m uvicorn app:app --host 127.0.0.1 --port 8000
 echo.
-echo 💡 Or use PM2:
+echo [INFO] Or use PM2:
 echo    pm2 start ecosystem.config.cjs
 echo.
-echo 📁 Model cache location:
-echo    C:\Users\User\.cache\huggingface\hub
+echo [INFO] Model cache location:
+echo    %USERPROFILE%\.cache\huggingface\hub
 echo.
 pause
