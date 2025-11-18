@@ -28,7 +28,7 @@
 - **Frontend**: Blade, TailwindCSS
 - **База даних**: MySQL
 - **AI/ML**: Google Gemini API, sentence-transformers (Python)
-- **Парсинг**: Puppeteer (Node.js)
+- **Парсинг**: Puppeteer (Node.js), Readability (PHP), DOMDocument
 - **Векторна БД**: ChromaDB
 - **Автоматизація**: Cronical (Windows Cron)
 
@@ -155,6 +155,26 @@ GEMINI_REQUEST_TIMEOUT=30
 ```
 
 ⚠️ **Без API ключа аналіз статей працювати не буде!**
+
+##### ⚡ Важливо про ліміти API (Rate Limits)
+
+Система оптимізована під модель **`gemini-2.0-flash-exp`**. Для безкоштовного тарифу (**Free Tier**) діють такі обмеження:
+
+- **RPM** (Requests Per Minute): ~15 запитів на хвилину
+- **RPD** (Requests Per Day): ~1,500 запитів на день
+
+> 💡 Ліміти можуть змінюватися Google. Перевіряйте актуальні дані в [Google AI Studio](https://aistudio.google.com/app/apikey).
+
+**Програмні обмеження для безпеки:**
+
+Щоб гарантовано уникнути помилки `429 Too Many Requests` при автоматичній роботі, у консольних командах встановлено жорстке програмне обмеження:
+
+- ✅ **3 статті** за один запуск аналізу (`ConsoleAnalizeNodes`)
+- ✅ **3 статті** за один запуск генерації тегів (`ConsoleGenerateTags`)
+
+📊 **Сумарне навантаження**: 6 запитів за цикл - безпечно вкладається у хвилинний ліміт.
+
+⚠️ **Не збільшуйте ці ліміти в коді, якщо ви використовуєте безкоштовний ключ!** Для обробки великих обсягів даних розгляньте можливість використання платного тарифу Google AI.
 
 #### Python Service
 
@@ -511,7 +531,7 @@ php artisan cache:clear
 ### Підтримувані формати
 
 - **Статті**: HTML, JSON
-- **Експорт**: EXEL, JSON
+- **Експорт**: CSV, JSON
 - **Логи**: TXT, JSON
 
 ---
