@@ -1,0 +1,15 @@
+**/.venv
+**/__pycache__
+**/*.pyc
+**/*.pyo
+**/*.pyd
+.Python
+**/node_modules
+**/.git
+**/.gitignore
+**/.dockerignore
+**/README.md
+**/.env
+**/.vscode
+**/.idea
+**/vendor
