@@ -56,10 +56,11 @@ class ArticleContentParser
     {
         try {
             // Fetch HTML content
-            if ($useBrowser) {
-                $response = Http::timeout(30)->get('http://127.0.0.1:3000/scrape', [
-                    'source' => $url,
+            if ($useBrowser)
+                $response = Http::timeout(30)->get(env('PUPPETEER_URL', 'http://puppeteer:3000') . '/scrape', [
+                   'source' => $url,
                 ]);
+
                 $html = (string) $response->body();
 
                 if (! $html) {
