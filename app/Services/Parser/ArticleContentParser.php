@@ -56,7 +56,7 @@ class ArticleContentParser
     {
         try {
             // Fetch HTML content
-            if ($useBrowser)
+            if ($useBrowser) {
                 $response = Http::timeout(30)->get(env('PUPPETEER_URL', 'http://puppeteer:3000') . '/scrape', [
                    'source' => $url,
                 ]);
