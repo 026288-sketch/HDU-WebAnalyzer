@@ -48,8 +48,8 @@ class SourceService
 
         try {
             // First request via Puppeteer for full page load
-            $response = Http::timeout(30)->get('http://127.0.0.1:3000/scrape', [
-                'source' => $url,
+            $response = Http::timeout(30)->get(env('PUPPETEER_URL', 'http://puppeteer:3000') . '/scrape', [
+               'source' => $url,
             ]);
 
             if (! $response->successful()) {
